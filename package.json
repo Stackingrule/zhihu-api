@@ -1,0 +1,30 @@
+{
+  "name": "zhihu-api",
+  "version": "1.0.0",
+  "description": "zhihu-api design",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon inde.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stackingrule/zhihu-api.git"
+  },
+  "keywords": [
+    "api",
+    "design"
+  ],
+  "author": "Stackingrule",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stackingrule/zhihu-api/issues"
+  },
+  "homepage": "https://github.com/Stackingrule/zhihu-api#readme",
+  "dependencies": {
+    "koa": "^2.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
