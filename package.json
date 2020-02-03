@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon.cmd index.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/Stackingrule/zhihu-api#readme",
   "dependencies": {
-    "koa": "^2.11.0"
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.6"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
