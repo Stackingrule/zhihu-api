@@ -2,10 +2,10 @@
   "name": "zhihu-api",
   "version": "1.0.0",
   "description": "zhihu-api design",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon.cmd index.js"
+    "start": "nodemon.cmd app/index.js"
   },
   "repository": {
     "type": "git",
