@@ -13,6 +13,11 @@ class UsersCtl {
         ctx.body = user;
     }
 
+    async checkOwner(ctx, next) {
+        if (ctx.id !== ctx.state.user) {
+            ctx.throw(403, '没有权限');
+        }
+    }
     async create(ctx) {
         ctx.verifyParams({
             name: {type: 'string', required: true },
