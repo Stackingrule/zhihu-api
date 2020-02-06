@@ -17,7 +17,7 @@ const userSchema = new Schema({
             job: {type: String}
         } ],
     },
-    eduactions: {
+    educations: {
         type: [ {
             school: { type: String },
             major: { type: String },
