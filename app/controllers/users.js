@@ -14,9 +14,10 @@ class UsersCtl {
     }
 
     async checkOwner(ctx, next) {
-        if (ctx.id !== ctx.state.user) {
+        if (ctx.params.id !== ctx.state.user._id) {
             ctx.throw(403, '没有权限');
         }
+        await next();
     }
     async create(ctx) {
         ctx.verifyParams({
