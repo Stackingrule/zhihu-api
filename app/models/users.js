@@ -31,7 +31,7 @@ const userSchema = new Schema({
 
     // 关注
     following: {
-        type: [{ type: Schema.Type.ObjectId, ref: 'User'}],
+        type: [{ type: Schema.Types.ObjectId, ref: "User" }],
         select: false,
     },
 
