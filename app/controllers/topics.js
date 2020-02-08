@@ -14,6 +14,14 @@ class TopicsCtl {
             .skip(page * perPage);
     }
 
+    async checkTopicExist(ctx, next) {
+        const topic = await Topic.findById(ctx.params.id);
+        if (!user) {
+            ctx.throw(404, '话题不存在!');
+        }
+        await next();
+    }
+
     async findById(ctx) {
         const { fields = '' } = ctx.query;
         const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('');
