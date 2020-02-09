@@ -19,15 +19,15 @@ class QuestionsCtl {
         const question = await Question.findById(ctx.params.id).select('+questioner');
         if (!question) {
             ctx.throw(404, '话题不存在!');
-            ctx.state.question = question;
-            await next();
         }
+        ctx.state.question = question;
+        await next();
     }
 
     async findById(ctx) {
         const { fields = '' } = ctx.query;
         const selectFields = fields.split(';').filter(f => f).map(f => ' +' + f).join('');
-        const Question = await Question.findById(ctx.params.id).select(selectFields).populate('questioner topics');
+        const question = await Question.findById(ctx.params.id).select(selectFields).populate('questioner topics');
         ctx.body = question;
     }
 
@@ -44,8 +44,8 @@ class QuestionsCtl {
         const { question } = ctx.state;
         if (question.questioner.toString() !== ctx.state.user._id) {
             ctx.throw(403, '没有权限');
-            await next();
         }
+        await next();
     }
 
     async update(ctx) {
