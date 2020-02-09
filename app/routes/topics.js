@@ -6,6 +6,7 @@ const {
     create, update,
     checkTopicExist,
     listTopicFollowers,
+    listQuestions,
     } = require('../controllers/topics');
 const { secret } = require('../config');
 const auth = jwt({ secret });
@@ -19,5 +20,7 @@ router.get('/:id', checkTopicExist, findById);
 router.patch('/:id', auth, checkTopicExist, update);
 
 router.get('/:id/followers', checkTopicExist, listTopicFollowers);
+
+router.get('/:id/questions', checkTopicExist, listQuestions);
 
 module.exports = router;
