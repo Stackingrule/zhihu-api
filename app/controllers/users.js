@@ -1,6 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const User = require('../models/users');
 const Question = require('../models/questions');
+const Answer = require('../models/answers');
 const { secret } = require('../config');
 
 class UsersCtl {
@@ -166,6 +167,133 @@ class UsersCtl {
         const questions = await Question.find({ questioner: ctx.params.id });
         ctx.body = questions;
     }
+
+    // 喜欢与不喜欢
+    async likeAnswers(ctx, next) {
+        const item = await User.findById(ctx.state.user._id).select("+likingAnswers");
+        if (!item.likingAnswers.map(id => id.toString()).includes(ctx.params.id)) {
+            item.likingAnswers.push(ctx.params.id);
+            item.save();
+            /**
+             * $inc：字段更新操作
+             */
+            await Answer.findByIdAndUpdate(ctx.params.id, { $inc: { voteCount: 1 } })
+        }
+        ctx.body = {
+            code: 200,
+            data: {
+                message: "赞一个"
+            }
+        };
+        await next()
+    }
+    async unlikeAnswers(ctx) {
+        const item = await User.findById(ctx.state.user._id).select("+likingAnswers");
+        const index = item.likingAnswers.map(id => id.toString()).indexOf(ctx.params.id);
+        if (index !== -1) {
+            item.likingAnswers.splice(index, 1);
+            item.save();
+            await Answer.findByIdAndUpdate(ctx.params.id, { $inc: { voteCount: -1 } })
+        }
+        ctx.body = {
+            code: 200,
+            data: {
+                message: "取消成功"
+            }
+        }
+    }
+    async listLikingAnswers(ctx) {
+        /**
+         * populate: 引用其它集合中的文档(schema)
+         */
+        const user = await User.findById(ctx.params.id).select("+likingAnswers").populate("likingAnswers")
+        if (!user) ctx.throw(404, "用户不存在")
+        ctx.body = {
+            code: 200,
+            data: {
+                answers: user.likingAnswers
+            }
+        }
+    }
+    // 攒与踩
+    async dislikeAnswers(ctx, next) {
+        const item = await User.findById(ctx.state.user._id).select("+dislikingAnswers")
+        if (!item.dislikingAnswers.map(id => id.toString()).includes(ctx.params.id)) {
+            item.dislikingAnswers.push(ctx.params.id) // 点赞列表
+            item.save()
+        }
+        ctx.body = {
+            code: 200,
+            data: {
+                message: "踩一个"
+            }
+        }
+        await next()
+    }
+    async undislikeAnswers(ctx) {
+        const item = await User.findById(ctx.state.user._id).select("+dislikingAnswers")
+        const index = item.dislikingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
+        if (index !== -1) {
+            item.dislikingAnswers.splice(index, 1)
+            item.save()
+        }
+        ctx.body = {
+            code: 200,
+            data: {
+                message: "取消成功"
+            }
+        }
+    }
+    async listDislikingAnswers(ctx) {
+        const user = await User.findById(ctx.params.id).select('+dislikingAnswers').populate('dislikingAnswers');
+        if (!user) ctx.throw(404, "用户不存在");
+        ctx.body = {
+            code: 200,
+            data: {
+                answers: user.dislikingAnswers
+            }
+        }
+    }
+
+
+    // 收藏答案
+    // async collectAnswer(ctx) {
+    //     const item = await User.findById(ctx.state.user._id).select('collectingAnswers')
+    //     if (!item.collectingAnswers.map(id => id.toString()).includes(ctx.params.id)) {
+    //         item.collectingAnswers.push(ctx.params.id)
+    //         item.save()
+    //     }
+    //     ctx.body = {
+    //         code: 200,
+    //         data: {
+    //             message: "收藏成功"
+    //         }
+    //     }
+    // }
+    // async uncollectAnswer(ctx) {
+    //     const item = await User.findById(ctx.state.user._id).select("+collectingAnswers")
+    //     const index = item.collectingAnswers.map(id => id.toString()).indexOf(ctx.params.id)
+    //     if (index !== -1) {
+    //         item.collectingAnswers.splice(index, 1)
+    //         item.save()
+    //     }
+    //     ctx.body = {
+    //         code: 200,
+    //         data: {
+    //             message: "取消成功"
+    //         }
+    //     }
+    // }
+    // async listCollectingAnswers(ctx) {
+    //     const user = await User.findById(ctx.params.id).select('collectingAnswers').populate('collectingAnswers')
+    //     if (!user) ctx.throw(404, "用户不存在")
+    //     ctx.body = {
+    //         code: 200,
+    //         data: {
+    //             collects: user.collectingAnswers
+    //         }
+    //     }
+    // }
 }
 
 module.exports = new UsersCtl();
